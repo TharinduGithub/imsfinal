@@ -1,0 +1,225 @@
+﻿
+///////////// For Stock Outs /////////////
+
+USE IMS
+Go
+
+CREATE PROC LoadStockOutsByRecever
+@Recever_Code nvarchar(10),
+@Date date
+AS
+BEGIN
+  SELECT STOUTITM.[StockOutID] AS ID,
+		 ITM.[ItemID] AS [Item Code],
+		 ITM.[ItemName] AS [Item Name],		 
+		 CAT.[Name] AS Category,
+		 STOUTITM.[Quntity] AS Quntity,
+		 STOUT.[Recever_ID] AS [Recever Code]		 
+         FROM [IMS].[dbo].[StockOutItems] STOUTITM
+  INNER JOIN [IMS].[dbo].[StockOuts] STOUT ON 
+     STOUTITM.StockOutID = STOUT.StockOutID 
+  INNER JOIN Items ITM ON 
+   STOUTITM.ItemID = ITM.ItemID 
+  INNER JOIN Categories CAT ON 
+   ITM.Category_ID = CAT.ID 
+  WHERE STOUT.Recever_ID = @Recever_Code
+  AND STOUT.Date = @Date;
+END
+
+{
+
+USE IMS
+Go
+
+declare @dt as date;
+select @dt = GETDATE();
+Execute LoadStockInsByRecever @Recever_Code = 'R_0001' , @date = @dt;
+
+}
+
+------------------------------------------
+
+USE IMS
+Go
+
+CREATE PROC LoadStockOutsByCategory
+@Categoty_ID int,
+@Date date
+AS
+BEGIN
+  SELECT STOUTITM.[StockOutID] AS ID,
+		 ITM.[ItemID] AS [Item Code],
+		 ITM.[ItemName] AS [Item Name],		 
+		 CAT.[Name] AS Category,
+		 STOUTITM.[Quntity] AS Quntity,
+		 ISNULL(STOUT.[Recever_ID],'No Recever') AS [Recever Code]		 
+         FROM [IMS].[dbo].[StockOutItems] STOUTITM
+  INNER JOIN [IMS].[dbo].[StockOuts] STOUT ON 
+     STOUTITM.StockOutID = STOUT.StockOutID 
+  INNER JOIN Items ITM ON 
+   STOUTITM.ItemID = ITM.ItemID 
+  INNER JOIN Categories CAT ON 
+   ITM.Category_ID = CAT.ID 
+  WHERE CAT.ID = @Categoty_ID
+  AND STOUT.Date = @Date;
+END
+
+{
+
+USE IMS
+Go
+
+declare @dt as date;
+select @dt = GETDATE();
+Execute LoadStockInsByCategory @Recever_Code = '1' , @date = @dt;
+
+}
+
+---------------------------------------------
+
+USE IMS
+Go
+
+CREATE PROC LoadStockOutsAll
+@Date date
+AS
+BEGIN
+  SELECT STOUTITM.[StockOutID] AS ID,
+		 ITM.[ItemID] AS [Item Code],
+		 ITM.[ItemName] AS [Item Name],		 
+		 CAT.[Name] AS Category,
+		 STOUTITM.[Quntity] AS Quntity,
+		 ISNULL(STOUT.[Recever_ID],'No Recever') AS [Recever Code]		 
+         FROM [IMS].[dbo].[StockOutItems] STOUTITM
+  INNER JOIN [IMS].[dbo].[StockOuts] STOUT ON 
+     STOUTITM.StockOutID = STOUT.StockOutID 
+  INNER JOIN Items ITM ON 
+   STOUTITM.ItemID = ITM.ItemID 
+  INNER JOIN Categories CAT ON 
+   ITM.Category_ID = CAT.ID 
+  WHERE STOUT.Date = @Date;
+END
+
+{
+
+USE IMS
+Go
+
+declare @dt as date;
+select @dt = GETDATE();
+Execute LoadStockInsAll @date = @dt;
+
+}
+
+
+///////////// For Stock Ins //////////////
+
+USE IMS
+Go
+
+CREATE PROC LoadStockInsBySupplier
+@Supplier_Code nvarchar(20),
+@Date date
+AS
+BEGIN
+  SELECT STINITM.[StockInID] AS ID,
+		 ITM.[ItemID] AS [Item Code],
+		 ITM.[ItemName] AS [Item Name],		 
+		 CAT.[Name] AS Category,
+		 STINITM.[Quntity] AS Quntity,
+		 STIN.[Supplier_ID] AS [Supplier Code]		 
+         FROM [IMS].[dbo].[StockInItems] STINITM
+  INNER JOIN [IMS].[dbo].[StockIns] STIN ON 
+     STINITM.StockInID = STIN.StockInID 
+  INNER JOIN Items ITM ON 
+   STINITM.ItemID = ITM.ItemID 
+  INNER JOIN Categories CAT ON 
+   ITM.Category_ID = CAT.ID 
+  WHERE STIN.Supplier_ID = @Supplier_Code
+  AND STIN.Date = @Date;
+END
+
+{
+
+USE IMS
+Go
+
+declare @dt as date;
+select @dt = GETDATE();
+Execute LoadStockInsBySupplier @Supplier_Code = 'R_0001' , @date = @dt;
+
+}
+
+------------------------------------------
+
+USE IMS
+Go
+
+CREATE PROC LoadStockInsByCategory
+@Categoty_ID int,
+@Date date
+AS
+BEGIN
+  SELECT STINITM.[StockInID] AS ID,
+		 ITM.[ItemID] AS [Item Code],
+		 ITM.[ItemName] AS [Item Name],		 
+		 CAT.[Name] AS Category,
+		 STINITM.[Quntity] AS Quntity,
+		 ISNULL(STIN.[Supplier_ID],'No Supplier') AS [Supplier Code]		 
+         FROM [IMS].[dbo].[StockInItems] STINITM
+  INNER JOIN [IMS].[dbo].[StockIns] STIN ON 
+     STINITM.StockInID = STIN.StockInID 
+  INNER JOIN Items ITM ON 
+   STINITM.ItemID = ITM.ItemID 
+  INNER JOIN Categories CAT ON 
+   ITM.Category_ID = CAT.ID 
+  WHERE CAT.ID = @Categoty_ID
+  AND STIN.Date = @Date;
+END
+
+{
+
+USE IMS
+Go
+
+declare @dt as date;
+select @dt = GETDATE();
+Execute LoadStockInsByCategory @Recever_Code = '1' , @date = @dt;
+
+}
+
+---------------------------------------------
+
+USE IMS
+Go
+
+CREATE PROC LoadStockInsAll
+@Date date
+AS
+BEGIN
+  SELECT STINITM.[StockInID] AS ID,
+		 ITM.[ItemID] AS [Item Code],
+		 ITM.[ItemName] AS [Item Name],		 
+		 CAT.[Name] AS Category,
+		 STINITM.[Quntity] AS Quntity,
+		ISNULL(STIN.[Supplier_ID],'No Supplier') AS [Supplier Code]		 
+         FROM [IMS].[dbo].[StockInItems] STINITM
+  INNER JOIN [IMS].[dbo].[StockIns] STIN ON 
+     STINITM.StockInID = STIN.StockInID 
+  INNER JOIN Items ITM ON 
+   STINITM.ItemID = ITM.ItemID 
+  INNER JOIN Categories CAT ON 
+   ITM.Category_ID = CAT.ID 
+  WHERE STIN.Date = @Date;
+END
+
+{
+
+USE IMS
+Go
+
+declare @dt as date;
+select @dt = GETDATE();
+Execute LoadStockOutsAll @date = @dt;
+
+}
